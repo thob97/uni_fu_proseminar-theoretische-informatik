@@ -1,0 +1,202 @@
+\input{src/header}
+
+\newcommand{\dozent}{Günther Rothe}
+%\newcommand{\tutor}{Samuel Domiks}
+%\newcommand{\tutoriumNo}{02\\Materialien: Latex, Skript, Requirements Engineering: A Roadmap}
+\newcommand{\ubungNo}{05}
+\newcommand{\veranstaltung}{Proseminar: Theoretische Informatik}
+\newcommand{\semester}{W21/22}
+\newcommand{\studenten}{Thore Brehmer}
+\setcounter{section}{-1} 
+
+% /////////////////////// BEGIN DOKUMENT /////////////////////////
+\begin{document}
+\input{src/titlepage}
+
+% /////////////////////// Übersicht /////////////////////////
+\section{Übersicht}
+
+In dieser Zusammenfassung haben wir uns mit dem Paper {\itshape'Emmanuel Jeandel and Nicolas Rolin. Fixed Parameter Undecidability for Wang Tilesets. In Symposium on Cellular Automata (JAC), pages 69–85, 2012.'} auseinander gesetzt, um das folgenden Theorem zu beweisen: {\itshape'If the difference between the number of edges and the number of vertices in G is less than 2, then $\tau$ is not minimal aperiodic.'}
+
+Die dazu wichtigsten Abschnitte im Paper sind: \textbf{1. die Definition} von Wang bars, \textbf{2. die Äquivalenz der tileability von Wangbars und Wangtiles} und \textbf{3. der Beweis} des oben genannten Theorems mithilfe der Wangbars.
+
+Diese Abschnitte werden wir chronologisch durchgehen.
+
+
+% /////////////////////// Teil 1 /////////////////////////
+\section{Definitionen}
+\begin{itemize}
+    \item \textbf{Wangbar}
+    \begin{itemize}
+        \item \textbf{Wangbar ($b_e,b_w,b_n,b_s$)} sind Wangtile aber horizontal größer. Das bedeutet, dass die Nord($b_n$) und West($b_w$) Wörter \ge 1 sein können, jedoch muss $|b_w| =  |b_n|$ gelten.
+        \item Ansonsten fungieren die Wangbar und deren Graphendarstellung ähnlich wie die Wangtile und deren Graphendarstellung, welche wir aus vorherigen Treffen kennen.
+        \item Durch ihre horizontale Größe bieten sie jedoch gewissen Eigenschaften, welche uns beim Beweis des zu bearbeitenden Theorems helfen.
+    \end{itemize}
+    
+    \item \textbf{Weiteres}
+    \begin{itemize}
+        \item \textbf{Barset}: eine Menge von Wangbars.
+        \item \textbf{Parameter:} \textbf{n($\tau$)}: Anzahl von tiles, \textbf{c($\tau$)}: Maximum Anzahl von Farben (pro tile eine Farbe). %HIER VIELLEICHT ÄNDERN
+        \item Betrachtet als Graph: \textbf{n($\tau$)}: Kanten, \textbf{c($\tau$)}: Knoten mit mindestens einer ausgehenden Kante.
+    \end{itemize}
+    
+\end{itemize}
+
+
+
+
+
+% /////////////////////// Teil 2 /////////////////////////
+\section{Äquivalenz der tileability von Wangbars und Wangtiles}
+Nun zeigen wir, dass die tileability von einem Barset reduzierbar auf die tileability von einen tileset ist und umgekehrt.
+
+\begin{itemize}
+    \item Dieses Theorem ist zwar nicht notwendig für den Beweis, da wir ihn jedoch in der Klasse besprochen habe, werde ich ihn auch hier erwähnen.
+    \\ {\itshape \textbf{Theorem 2.1.} Tileability with k bars is many-one reducible to tileability of Wang tiles with parameter at most k-1. That is, every barset B with k bars can be transformed into a tileset W with parameter at most k-1.}
+    \begin{itemize}
+        \item Sei $c$ die max Anzahl an Farben von einem Barset $B$ und $k$ die Anzahl der Wangbars.
+        \item Der \textbf{Beweis} funktioniert wie folgt: Wir werden die Wangbars immer weiter aufteilen, bis die Wangbars zu Wangtiles werden.
+        \item Bei jeder Aufteilung erhalten wir \underline{einen neuen Wangbar} und \underline{eine {neue} Farbe}.  
+        \item Dadurch bleibt die Anzahl an Wangbars und Farben \underline{konstant}.
+        \item Sei $p$ die Anzahl an Teilungen, dann erhalten wir $p$ neue Wangbars (Wangtiles) und $p$ neue Farben.
+        \item Daraus folgt: $n(\tau) = p+k$ und $c(\tau)\geq p+c$
+        \item Also gilt: $n(\tau) - c(\tau) \leq k-c$
+        \item Und um das $c$ aus der Gleichung zu entfernen können wir ein Upperbound nehmen (da $c \leq 1$): \\$k-c \leq k - 1$
+    \end{itemize}
+    
+    
+    
+
+    \item {\itshape \textbf{Theorem 2.2.} Tileability of tilesets with parameter at most k is reducible to tileability with at most 2k bars. More precisely, using tileability with at most 2k bars as on oracle, we can design an algorithm that, given a tileset W with parameter at most k, decides whether W tiles the plane, asking at most one question to the oracle.}
+    \begin{itemize}
+        \item Für diesen Beweis brauchen wir zuerst 2 Propositions
+        \begin{enumerate}
+            \item \textbf{Proposition 2.1.} Let $\tau$ be a tileset represented as a graph G. Suppose that there exists two vertices u, v so that: There exists an edge from u to v, corresponding to the tile t and there exists no path from v to u. Then $\tau$ tiles the plane if and only if $\tau - {t}$ tiles the plane.
+            \begin{itemize}
+                \item Diese These haben wir bereits für Wangtiles in vorherigen Sitzungen bewiesen. Der Beweis für Wangbars ist ähnlich.
+                \item Dadurch wissen wir nun, dass alle verbundenen Knoten stark verbunden sind (strongly connected).
+            \end{itemize}
+            
+            \\ \ \\ Sei $u \sim_G v$ eine Äquivalenzrelation, welche bedeutet, dass es einen Weg vom Knoten $u$ zu $v$ gibt. (Merke: Äquivalenzklassen zu dieser Relation sind stark verbundene Komponenten (strongly connected components))
+            \item \textbf{Proposition 2.2.} Let $\tau$ be a tileset represented as a graph G for which $\sim_G$ is an equivalence relation. Let H be an equivalence class so that every vertex in H is of outdegree exactly one, and T the tiles corresponding to H. Then: \textbf{1.} Either $\tau - T$ tiles the plane, \textbf{2.} there is a periodic tiling by $\tau$ or \textbf{3.} $\tau$ does not tile the plane.
+            \begin{itemize}
+                \item Die Idee: $T$ ist die Menge aller stark verbundenen Knoten, welche genau eine ausgehende Kante besitzen. Also besteht $T$ nur aus Kreisen.
+                \item Wenn $\tau$ die Ebene pflastert, dann werden entweder die Kreise aus $T$ nicht benötigt und $\tau$ pflastert aperiodisch die Ebene \textbf{1.} oder $\tau$ ist solch ein Kreis und pflastert periodisch die Ebene \textbf{2.}
+            \end{itemize}
+        \end{enumerate}
+        
+        \item Nun zu der \textbf{Idee des Beweises vom Theorem 2.2.} (Der Beweis würde diese Zusammenfassung nur unnötig in die Länge ziehen, daher nur die Idee):
+        \begin{itemize}
+            \item Wir starten von einen tileset $W$ mit Parameter höchstens $k$ und $V \subseteq W$.
+            \item Mithilfe Proposition 2.1 entfernen will alle Knoten aus $V$, welche nichts am tiling beitragen und mithilfe von Proposition 2.2. entfernen wir alle Kreise aus $V$.
+            \item Nun ändern wir für jeden strongly connected Teilgraph aus $V$, die Knoten und Kanten so, bis jeder dieser Teilgraphen mindestens doppelt so viele Kanten wie Knoten besitzt.
+            Diese Modifizierungen an $V$ \underline{verändern die tileability nicht}.
+            \item Nun erhalten wir einen Graphen mit $n$ Kanten und $p$ Knoten, wobei $n \geq 2p$ gilt.
+            \item Da wir beim Erstellen des Graphen, immer wenn wir einen Knoten gelöscht haben auch eine Kante gelöscht haben (und umgekehrt), gilt immer noch: $n - p \leq k$.
+            \item Nun können wir $n$ umstellen und erhalten so: $n = 2n - 2p + 2p - n \leq 2k + 0 \leq 2k$. Also erhalten wir einen Barset $B$ mit höchstens $2k$ Wangbars.
+            \item Nun wissen wir dank des Proposition 2.2.: Wenn $B$ die Ebene aperiodisch pflastert, dann auch $W$. Sonst pflastert $W$ die Ebene periodisch oder gar nicht.
+        \end{itemize}
+        
+    \end{itemize}
+    
+    
+    \item \textbf{Schlussfolgerung:}
+    \begin{enumerate}
+        \item[] Voraussetzung: In der Gruppenbesprechung sind wir davon ausgegangen, dass periodische Pflasterung entscheidbar ist.
+        \item Wenn wir entscheiden können ob ein Tileset mit Parameter $k-1$ die Ebene pflastert, dann können wir auch entscheiden ob ein Barset mit $k$ Wangbars die Ebene pflastert. (Theorem 2.1.)
+        \item Und wenn wir entscheiden können ob ein Barset mit $2k$ Wangbars die Ebene pflastert, dann können wir auch entscheiden ob ein Tileset mit Parameter $k$ die Ebene pflastert. (Theorem 2.2.)
+    \end{enumerate}
+
+
+    
+\end{itemize}
+
+
+
+
+
+% /////////////////////// Teil 3 /////////////////////////
+\section{Beweis}
+Da wir nun wissen, dass die tileability von einem Tileset reduzierbar auf die tileability von einen Barset ist, können wir mit dem eigentlichen Beweis anfangen. Und das schaffen wir, indem wir folgenden Theorem beweisen: {\itshape'A set of two Wang bars B tiles the plane if there is a periodic tiling by B'}. 
+
+Das schaffen wir, indem wir alle möglichen Anordnungen von zwei Wangbars durchgehen und dabei versuchen eine nicht periodisches (aperiodisches) Pflasterung zu finden .
+
+\textbf{Vorab:}
+\begin{itemize}
+    \item Seien $\alpha$ und $\beta$ zwei Wangbars und |$\alpha$| >= |$\beta$|
+    \item Außerdem gehen wir davon aus, das weder $\alpha$ noch $\beta$ alleine dazu reicht, zu tilen. (da sonst periodisch)
+\end{itemize}
+
+\textbf{Nun zu den Fällen:}
+\begin{itemize}
+    \item $\alpha$ und $\beta$ müssen die gleichen Farben auf Ost und West haben
+    \begin{itemize}
+        \item Sonst könnten $\alpha$ und $\beta$ nicht der gleichen Reihe sein
+        \item Oder $\alpha$ käme immer nach $\beta$ und $\beta$ nach $\alpha$
+        \item Beides führt zu einer periodischen Pflasterung
+        \item Wir können die Bars also wie folgt betrachten: $\alpha$ = ($\alpha_n$,$\alpha_s$), b=($\beta_n$,$\beta_s$), was die Veranschaulichung vereinfachen sollte.
+    \end{itemize}
+    
+    \item \textbf{Lemma 4.1.} {\itshape If the following pattern appears in some tiling, then there exists a periodic tiling. Where $\gamma$ is one of the two bars $\alpha$ or $\beta$}
+    \\ \includegraphics[width=\textwidth]{src/pics/1.png}
+    \begin{itemize}
+        \item In diesem Fall wäre das obere und untere Wort von $\gamma$ gleich, lediglich mit einer Verschiebung. 
+        \item Daraus folgt, dass wir auch hier eine periodisches Pflasterung haben, da wir diese Reihe, mit der Verschiebung, immer wieder wiederholen können.
+    \end{itemize}
+    
+    \item \textbf{Lemma 4.2.} {\itshape If there is a tiling where the following pattern (and its horizontal symmetry) does not appear, then there exists a periodic tiling.}
+    \\ \includegraphics[width=\textwidth]{src/pics/2.png}
+    \begin{itemize}
+        \item Sei $p \geq 1$ die minimale Anzahl der aufeinander folgenden $\alpha$ Wangbars. \\Für die Bild Beispiele gilt $p = 2$.
+        \\ \includegraphics[width=\textwidth]{src/pics/3.png}
+        \item Laut der Definition von $p$ müssen nun die tiles von $\beta$ umgeben werden.
+        \\ \includegraphics[width=\textwidth]{src/pics/4.png}
+        \item Wenn wir nun ein weiteres $\beta$ wie im Bild hinzufügen, würden wir im Lemma 4.1. fallen. (Rot ist der neu hinzugefügte Wangbar und blau umrandet sind die Wangbars welche in das Theorem 4.1. fallen)
+        \\ \includegraphics[width=\textwidth]{src/pics/5.png}
+        \item Unsere einzige Option ist also, $\alpha$ hinzuzufügen. Diese werden wir auch wieder mit $\beta$ umgeben.
+        \\ \includegraphics[width=\textwidth]{src/pics/6.png}
+        \\ \includegraphics[width=\textwidth]{src/pics/7.png}
+        \item Wenn wir nun das unterste linke $\beta$ entnehmen, sehen wir, dass wir diese Wangbar Anordnung beliebig oft horizontal wiederholen können. Also erzeugt auch dieses Muster eine periodische Pflasterung. 
+        \\ \includegraphics[width=\textwidth]{src/pics/8_2.png} 
+        \\ \includegraphics[width=\textwidth]{src/pics/8_3.png} 
+    \end{itemize}    
+    
+    
+    \item Nun sind wir bei dem \textbf{letzten möglichen Muster}.
+    \\ \includegraphics[width=\textwidth]{src/pics/9.png}
+    \begin{itemize}
+        \item Es könnte sein, dass vorab der unteren linken $\alpha$ Wangbar bereits $p_1$ viele $\alpha$ kamen und dass die obere rechte $\alpha$ Wangbar von $p_2$ vielen $\alpha$ gefolgt ist. 
+        \\Wir merken uns $p = min(p_1,p_2)$ und ignorieren die restlichen $p_2 - p$, da sie die Pflasterung nicht verändern. 
+        \\Für dieses Beispiel wählen wir $p=2$.
+        \\ \includegraphics[width=\textwidth]{src/pics/10.png}
+        \item Wenn wir nun ein $\alpha$ wählen, würden wir wieder im Lemma 4.1 landen. Daher wählen wir $q_1$ viele $\beta$ Wangbars für die obere linke Seite und $q_2$ viele für die untere rechte Seite.
+        \\ \includegraphics[width=\textwidth]{src/pics/11.png}
+        
+        \item Wenn wir $q_1, q_2$ $\beta$ Wangbars so wählen, dass sie alle $p$ $\alpha$ Wangbars überdecken, landen wir im Lemma 4.2.
+        \\ Bsp $min(p_1,p_2) = 3$
+        \\ \includegraphics[width=\textwidth]{src/pics/12.png}
+        \\ \includegraphics[width=\textwidth]{src/pics/12_2.png}
+        
+        \item Wenn wir $q_1, q_2$ $\beta$ Wangbars so wählen, dass nicht alle $p$ $\alpha$ Wangbars überdeckt werden sondern nur $p'\leq p$, sodass die $p'-1te$ Wangbar überdeckt ist aber die $p'te$ Wangbar nicht. 
+        \\Bsp $p' = 1$
+        \\ \includegraphics[width=\textwidth]{src/pics/13.png}
+        
+        \item Dann müssen wir nach Definition von $q$ eine weitere $\alpha$ Wangbar wählen. Und landen dadurch wieder im Lemma 4.2.
+        \\ \includegraphics[width=\textwidth]{src/pics/14.png}
+        \\ \includegraphics[width=\textwidth]{src/pics/14_2.png}
+        
+    \end{itemize}
+\end{itemize}
+
+
+\textbf{Folgerung:}
+\begin{enumerate}
+    \item Da wir nun für ein Barset der Größe 2 alle Fälle bearbeitet haben, wissen wir, dass es immer periodisch ist.
+    \item Und aus dem Theorem 2.2. folgt: Die tileability von Wingtiles mit Parameter 1 ist reduzierbar auf die tileability von 2 Wangbars.
+\end{enumerate}
+
+Daraus ergibt sich, dass ein Tileset mit dem Parameter $n-c \leq 1$ ein Pflasterung hat genau dann, wenn sie periodisch ist. 
+\\Beziehungsweise: {\itshape'If the difference between the number of edges and the number of vertices in G is less than 2, then $\tau$ is not minimal aperiodic.'}.
+
+% /////////////////////// END DOKUMENT /////////////////////////
+\end{document}
